@@ -3,29 +3,25 @@ import Pizza from '../models/Pizza';
 import './styles.css'
 
 
-interface AddPizzaFormProps {
-    addPizza: (newPizza: Pizza) => void
+interface EditPizzaFormProps {
+    data: Pizza
+    updatePizza: (newPizza: Pizza) => void;
+    handleToggleEdit: () => void
 }
 
-const initState = {
-    title: '',
-    price: '',
-    img: '',
 
-}
+const EditPizzaForm:React.FC<EditPizzaFormProps> = ({ data, updatePizza, handleToggleEdit }) => {
 
-const AddPizzaForm:React.FC<AddPizzaFormProps> = ({ addPizza }) => {
-
-    const [newPizza, setNewPizza] =
-    useState<{title:string, price:string, img:string}>(initState)
+    const [editPizza, setEditPizza] =
+    useState<Pizza>(data)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log('handle change >>', e.target)
         const {name, value } = e.target;
         console.log('name is', name)
         console.log('value is', value)
-        setNewPizza({
-            ...newPizza,
+        setEditPizza({
+            ...editPizza,
             [name]: value
         })
     }
@@ -33,16 +29,11 @@ const AddPizzaForm:React.FC<AddPizzaFormProps> = ({ addPizza }) => {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         
-        const {title, price, img} = newPizza;
+        const {title, price, img} = editPizza;
 
         if (title && price && img) {
-            addPizza({
-                title,
-                price: Number(price),
-                img,
-                id: Date.now()
-            })
-        setNewPizza(initState)
+            updatePizza(editPizza)
+            handleToggleEdit()
         }
     }
     
@@ -50,31 +41,31 @@ const AddPizzaForm:React.FC<AddPizzaFormProps> = ({ addPizza }) => {
 
     
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className='edit-form'>
         <input
         name='title'
         type='text'
         placeholder='name'
         onChange={handleChange}
-        value={newPizza.title}
+        value={editPizza.title}
         />
         <input
         name='price'
         type='text'
         placeholder='price'
         onChange={handleChange}
-        value={newPizza.price}
+        value={editPizza.price}
         />
         <input
         name='img'
         type='text'
         placeholder='Image'
         onChange={handleChange}
-        value={newPizza.img}
+        value={editPizza.img}
         />
-        <button type='submit'>Add to menu</button>
+        <button type='submit'>Confirm</button>
     </form>
   )
 }
 
-export default AddPizzaForm
+export default EditPizzaForm

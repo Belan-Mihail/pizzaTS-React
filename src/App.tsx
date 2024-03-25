@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import AddPizzaForm from './components/AddPizzaForm'
+import DisplayPizzas from './components/DisplayPizzas';
 import Pizza from './models/Pizza'
 
 const App: React.FC = () => {
@@ -11,6 +12,15 @@ const App: React.FC = () => {
     setPizzasList([...pizzasList, newPizza])
   }
 
+  const updatePizza = (newPizza:Pizza) => {
+    setPizzasList(pizzasList.map((pizza) => pizza.id === newPizza.id ? newPizza : pizza))
+  }
+
+  const deletePizza = (id:number) => {
+    const NewPizzasList = pizzasList.filter(pizza => pizza.id !== id)
+    setPizzasList(NewPizzasList)
+  }
+
   return (
     <div className="App">
       <div className='wrap'>
@@ -19,6 +29,11 @@ const App: React.FC = () => {
         </span>
         <AddPizzaForm 
         addPizza={addPizza}
+        />
+        <DisplayPizzas 
+        pizzasList={pizzasList}
+        deletePizza={deletePizza}
+        updatePizza={updatePizza}
         />
       </div>
     </div>
